@@ -1,0 +1,92 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  function handleLogin(event) {
+    event.preventDefault();
+
+    const savedUserText = localStorage.getItem("registeredUser");
+
+    if (!savedUserText) {
+      setError("No account found. Please register first.");
+      return;
+    }
+
+    const savedUser = JSON.parse(savedUserText);
+
+    if (email === savedUser.emailAddress && password === savedUser.userPassword) {
+      setError("");
+      alert("Login successful!");
+      
+      // --- SOLUTION TO THE EXERCISE STARTS HERE ---
+      
+      // 1. Save a flag saying the user is officially logged in
+      localStorage.setItem("isLoggedIn", "true");
+      
+      // 2. Save just the user's name so the Dashboard can say hello!
+      localStorage.setItem("currentUser", savedUser.fullName);
+      
+      // --- SOLUTION TO THE EXERCISE ENDS HERE ---
+
+      navigate("/dashboard"); 
+    } else {
+      setError("Incorrect email or password.");
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h2 className="text-2xl font-bold mb-4">Login to Your Account</h2>
+
+        {error !== "" && (
+          <p className="text-red-500 font-bold mb-4">{error}</p>
+        )}
+
+        <form onSubmit={handleLogin}>
+          <div className="flex flex-col">
+            <label className="block text-gray-700 font-medium mb-1">Email</label>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              className="border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="block text-gray-700 font-medium mb-1">Password</label>
+            <input 
+              type="password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition mt-6"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Login;
+
+
+mongodb+srv://admin:admin123@cluster0.dmubjer.mongodb.net/?appName=Cluster0
+
+
+
+
